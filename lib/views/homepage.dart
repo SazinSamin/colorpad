@@ -12,7 +12,6 @@ class NoteList extends StatefulWidget {
   }
 }
 
-
 class NoteListState extends State<NoteList> {
   Future<List<Map<String, dynamic>>> taskList;
   updateTaskList() async {
