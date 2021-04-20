@@ -10,13 +10,22 @@ class CustomCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(10, 0, 10, 7),
+      padding: EdgeInsets.fromLTRB(20, 7.5, 20, 20),
           child: Container(
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(60),
-              gradient: LinearGradient(
-                colors: ColorsLibrary.colorListsofLists[index % ColorsLibrary.colorListsofLists.length],
-              )
+                           color: ColorsLibrary.colorListsofLists[index % ColorsLibrary.colorListsofLists.length],
+              boxShadow: [
+                BoxShadow(
+                    color: ColorsLibrary.ListsOfShadowColor[index % ColorsLibrary.ListsOfShadowColor.length],
+                    offset: Offset(0.0, 10.0), //(x,y)
+                    blurRadius: 5.0,
+                  ),
+              ],
+             
+              borderRadius: BorderRadius.circular(20),
+             /* gradient: LinearGradient(
+                
+              )*/
             ),
         //color: ColorsLibrary.colorLists[index % ColorsLibrary.colorLists.length],
         child: Padding(
@@ -24,12 +33,12 @@ class CustomCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Center(child: _NoteTitle(notes[index]['id'].toString(), ColorsLibrary.fontcolorLists [index % ColorsLibrary.fontcolorLists.length])),
+              //Center(child: _NoteTitle(notes[index]['id'].toString(), ColorsLibrary.fontcolorLists [index % ColorsLibrary.fontcolorLists.length])),
               Center(child: _NoteTitle(notes[index]['title'], ColorsLibrary.fontcolorLists [index % ColorsLibrary.fontcolorLists.length])),
               Container(
                 height: 4,
               ),
-              Center(child: _NoteText(notes[index]['text'], ColorsLibrary.fontcolorLists [index % ColorsLibrary.fontcolorLists.length]))
+              notes[index]['text'] == "" ? Container() : Center(child: _NoteText(notes[index]['text'], ColorsLibrary.fontcolorLists [index % ColorsLibrary.fontcolorLists.length])),
             ],
           ),
         ),
@@ -93,17 +102,45 @@ class Navigation{
 class PadHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Color(0xff3A4166),
-     /*decoration: BoxDecoration(
-
-       gradient: LinearGradient(
-         //colors: [Colors.lightBlueAccent,Colors.blueAccent]
-       )
-     ),*/
+    return Stack(
+      children: [
+        Container(
+     decoration: BoxDecoration(
+       borderRadius: BorderRadius.vertical(top: Radius.zero, bottom: Radius.circular(40)),
+       color: Color(0xff001AFF),
+       boxShadow: [
+         BoxShadow(
+           color: Colors.blue,
+                    offset: Offset(1.0, 10.0), //(x,y)
+                    blurRadius: 19.0,
+         )
+       ]
+     ),
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height/5.5,
-        child: Center(child: Text("Color Pad", style: TextStyle(color: Colors.white, fontSize: 70),),),
-      );
+      height: MediaQuery.of(context).size.height/3.5,
+        child: Center(child: Text("Color Pad", style: TextStyle(color: Colors.white, fontSize:MediaQuery.of(context).size.height/11),),),
+      )
+      ],
+    );
+  }
+}
+
+
+
+
+class AddeditNewNoteTextContainer extends StatelessWidget {
+
+  NoteMode noteMode;
+
+  AddeditNewNoteTextContainer(this.noteMode);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+                padding: const EdgeInsets.fromLTRB(5, 10, 5, 40),
+                child: noteMode == NoteMode.Adding ? 
+                Center(child: Text("Add new task", style: TextStyle(fontSize: 40, color: Colors.white),)) : 
+                Center(child: Text("Edit task", style: TextStyle(fontSize: 40, color: Colors.white))),
+              );
   }
 }

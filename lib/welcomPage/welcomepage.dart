@@ -8,9 +8,10 @@ class WelcomePage extends StatelessWidget {
           child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text("Welcom", style: TextStyle(fontSize: 30),),
-          SizedBox(height: 20,),
-          CircularProgressIndicator(),
+          Text("Welcome", style: TextStyle(fontSize: MediaQuery.of(context).size.width/5,color: Color(0xff001AFF),),),
+          Text("Abeed", style: TextStyle(fontSize: MediaQuery.of(context).size.width/5,color: Color(0xff001AFF),),),
+          //SizedBox(height: 20,),
+          //CircularProgressIndicator(),
         ],
       )),
     );

@@ -1,5 +1,8 @@
+import 'package:colorpad/views/about.dart';
+import 'package:colorpad/views/nodata.dart';
 import 'package:colorpad/welcomPage/welcomepage.dart';
 import 'package:colorpad/widgets/widgets%20and%20navigations.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:colorpad/database/database.dart';
 import 'addEdit.dart';
@@ -21,6 +24,7 @@ class NoteListState extends State<NoteList> {
     });
   }
 
+  int indexForScreenRoute = 1;
 
   @override
   void initState() {
@@ -31,22 +35,73 @@ class NoteListState extends State<NoteList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xff3A4166),
-      body: Column(
-        //mainAxisAlignment: MainAxisAlignment.center,
-        //crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          PadHeader(),
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                color: Color(0xff3A4166),
-                borderRadius: BorderRadius.vertical(top: Radius.elliptical(50, 50))),
+      body: indexForScreenRoute == 1 ? 
+      RouteHomePage(taskList: taskList, updateTaskList: updateTaskList,): indexForScreenRoute == 0 ?
+        Note(NoteMode.Adding, null, updateTaskList): About(),
+
+
+      bottomNavigationBar: CurvedNavigationBar(
+
+        height: MediaQuery.of(context).size.height/20,
+        color: Color(0xff001AFF),
+        buttonBackgroundColor: Color(0xff001AFF),
+        backgroundColor: Colors.white,
+        items: [
+          Icon(Icons.add, color: Colors.white, size: 30,),
+          Icon(Icons.home, color: Colors.white,),
+          Icon(Icons.list, color: Colors.white,),
+        ],
+       index: indexForScreenRoute,
+        onTap: (index){
+          setState(() {
+            indexForScreenRoute = index;
+          });
+        },
+        animationDuration: Duration(milliseconds: 500),
+        ),
+    );
+  }
+}
+
+
+
+class RouteHomePage extends StatefulWidget {
+
+  Future<List<Map<String, dynamic>>> taskList;
+  Function updateTaskList;
+
+  RouteHomePage({this.taskList, this.updateTaskList});
+
+  @override
+  _RouteHomePageState createState() => _RouteHomePageState();
+}
+
+class _RouteHomePageState extends State<RouteHomePage> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [Colors.yellow, Colors.pink]
+        )
+      ),
+      child: Column(
+          //mainAxisAlignment: MainAxisAlignment.center,
+          //crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            PadHeader(),
+            Expanded(
               child: FutureBuilder(
-                future: taskList,
+                future: widget.taskList,
                 builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done) {
+                  if(snapshot.data == []){
+                    return NoDataHeader();
+                  }
+                  else if (snapshot.hasData) {
                     final notes = snapshot.data;
+                    print("The note here : $notes");
                     return ListView.builder(
                       itemBuilder: (context, index) {
                         return GestureDetector(
@@ -55,13 +110,13 @@ class NoteListState extends State<NoteList> {
                                   context,
                                   NoteMode.Editing,
                                   notes,
-                                  index,
-                                  updateTaskList);
+                                   snapshot.data.length - (index+1),
+                                  widget.updateTaskList);
                             },
                             //Every task widget
                             child: CustomCard(
                               notes: notes,
-                              index: index,
+                              index: snapshot.data.length - (index+1),
                             ));
                       },
                       itemCount: notes.length,
@@ -71,26 +126,9 @@ class NoteListState extends State<NoteList> {
                 },
               ),
             ),
-          ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.blueAccent,
-        onPressed: () {
-          Navigation.navigateToAddTask(
-              context, NoteMode.Adding, null, null, updateTaskList);
-        },
-        child: Icon(Icons.add),
-      ),
+          ],
+        ),
     );
   }
 }
 
-
-Widget screenRouting(int routeIndex){
-  if(routeIndex==0){
-    return NoteList();
-  }else if(routeIndex == 1){
-
-  }
-}
