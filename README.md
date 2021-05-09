@@ -2,6 +2,6 @@
 
 A new Flutter project.
 
-## Getting Started
+## Sqflite based persistance taskpad
 
 <img src="https://github.com/SazinSamin/colorpad/blob/master/flutter_01.png" width="20%">
